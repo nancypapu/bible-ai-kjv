@@ -29,7 +29,7 @@ def setup_data_if_needed():
     print("⬇️ Downloading KJV Bible...")
     resp = requests.get(KJV_URL)
     resp.raise_for_status()
-    bible = resp.json()
+    bible = bible = json.loads(resp.content.decode("utf-8-sig"))
 
     verses = []
     for book in bible:
