@@ -56,11 +56,12 @@ def build_embeddings():
 
     embeddings = []
     for i, v in enumerate(verses):
-        emb = openai.embeddings.create(
-            model="text-embedding-3-small",
-            input=v["text"]
+        emb = client.embeddings.create(
+        model="text-embedding-3-small",
+        input=v["text"]
         )
         embeddings.append(emb.data[0].embedding)
+
 
         if i % 500 == 0:
             embedding_status["progress"] = int((i / total) * 100)
