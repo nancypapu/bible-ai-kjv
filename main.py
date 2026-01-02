@@ -6,6 +6,7 @@ import os
 import numpy as np
 import requests
 import threading
+import time
 
 # ---------------- CONFIG ----------------
 
@@ -28,13 +29,21 @@ embedding_status = {
     "progress": 0
 }
 
-# ---------------- UTILS ----------------
+# ---------------- OPENAI CLIENT (RETRY SAFE) ----------------
 
-def get_openai_client():
-    api_key = os.getenv("OPENAI_API_KEY")
-    if not api_key:
-        raise RuntimeError("OPENAI_API_KEY is not set")
-    return OpenAI(api_key=api_key)
+def get_openai_client(wait=True):
+    while True:
+        api_key = os.getenv("OPENAI_API_KEY")
+        if api_key:
+            return OpenAI(api_key=api_key)
+
+        if not wait:
+            raise RuntimeError("OPENAI_API_KEY is not set")
+
+        print("⏳ Waiting for OPENAI_API_KEY to be available...")
+        time.sleep(2)
+
+# ---------------- UTILS ----------------
 
 def cosine_similarity(a, b):
     return np.dot(a, b) / (np.linalg.norm(a) * np.linalg.norm(b))
