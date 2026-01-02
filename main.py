@@ -1,8 +1,10 @@
 from fastapi import FastAPI, BackgroundTasks
 from pydantic import BaseModel
-import openai, json, os, numpy as np, requests, threading
+import json, os, numpy as np, requests, threading
+from openai import OpenAI
 
-openai.api_key = os.getenv("OPENAI_API_KEY")
+client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+
 
 app = FastAPI()
 
