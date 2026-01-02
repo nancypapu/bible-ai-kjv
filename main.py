@@ -99,10 +99,11 @@ def ask_bible(q: BibleQuery):
     verses = data["verses"]
     embeddings = np.array(data["embeddings"])
 
-    q_emb = openai.embeddings.create(
-        model="text-embedding-3-small",
-        input=q.question
+    q_emb = client.embeddings.create(
+    model="text-embedding-3-small",
+    input=q.question
     ).data[0].embedding
+
 
     scores = [cosine(q_emb, e) for e in embeddings]
     top = sorted(range(len(scores)), key=lambda i: scores[i], reverse=True)[:5]
@@ -112,7 +113,7 @@ def ask_bible(q: BibleQuery):
         for i in top
     )
 
-    ans = openai.chat.completions.create(
+    ans = client.chat.completions.create(
         model="gpt-4.1",
         messages=[
             {"role": "system", "content": SYSTEM_PROMPT},
